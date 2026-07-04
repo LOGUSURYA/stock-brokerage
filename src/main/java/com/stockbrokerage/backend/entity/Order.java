@@ -1,39 +1,53 @@
 package com.stockbrokerage.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import com.stockbrokerage.backend.enums.OrderStatus;
+import com.stockbrokerage.backend.enums.OrderType;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long clientId;
-    private Long stockId;
-    private String orderType;
+    // Client placing the order
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private ClientAccount client;
+
+    // Stock being traded
+    @ManyToOne
+    @JoinColumn(name = "stock_id", nullable = false)
+    private Stock stock;
+
+    // BUY or SELL
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderType orderType;
+
+    @Column(nullable = false)
     private Integer quantity;
-    private Double price;
-    private String status;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal price;
 
-    public Long getClientId() { return clientId; }
-    public void setClientId(Long clientId) { this.clientId = clientId; }
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal totalAmount;
 
-    public Long getStockId() { return stockId; }
-    public void setStockId(Long stockId) { this.stockId = stockId; }
+    @Column(nullable = false)
+    private LocalDateTime orderDate;
 
-    public String getOrderType() { return orderType; }
-    public void setOrderType(String orderType) { this.orderType = orderType; }
-
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
-
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status;
 }

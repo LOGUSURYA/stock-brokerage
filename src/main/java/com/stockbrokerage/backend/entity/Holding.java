@@ -1,27 +1,38 @@
 package com.stockbrokerage.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "holdings")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Holding {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long clientId;
-    private Long stockId;
-    private Integer quantity;
+    // Client who owns the stock
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private ClientAccount client;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Stock owned
+    @ManyToOne
+    @JoinColumn(name = "stock_id", nullable = false)
+    private Stock stock;
 
-    public Long getClientId() { return clientId; }
-    public void setClientId(Long clientId) { this.clientId = clientId; }
+    // Number of shares owned
+    @Column(nullable = false)
+    private Integer quantityOwned;
 
-    public Long getStockId() { return stockId; }
-    public void setStockId(Long stockId) { this.stockId = stockId; }
-
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    // Average buying price
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal averagePrice;
 }

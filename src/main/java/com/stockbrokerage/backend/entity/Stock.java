@@ -1,31 +1,39 @@
 package com.stockbrokerage.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "stocks")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Stock {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String symbol;
+    @Column(nullable = false)
     private String companyName;
-    private Double price;
-    private String market;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @Column(nullable = false, unique = true, length = 15)
+    private String stockSymbol;
 
-    public String getSymbol() { return symbol; }
-    public void setSymbol(String symbol) { this.symbol = symbol; }
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal currentPrice;
 
-    public String getCompanyName() { return companyName; }
-    public void setCompanyName(String companyName) { this.companyName = companyName; }
+    @Column(nullable = false)
+    private Integer availableQuantity;
 
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
+    @Column(nullable = false)
+    private String sector;
 
-    public String getMarket() { return market; }
-    public void setMarket(String market) { this.market = market; }
+    @Column(nullable = false)
+    private LocalDate createdDate;
 }

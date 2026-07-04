@@ -1,27 +1,46 @@
 package com.stockbrokerage.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ledger")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Ledger {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long clientId;
-    private String entryType;
-    private Double amount;
+    // Client whose ledger this belongs to
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private ClientAccount client;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Description of transaction
+    @Column(nullable = false)
+    private String description;
 
-    public Long getClientId() { return clientId; }
-    public void setClientId(Long clientId) { this.clientId = clientId; }
+    // Money credited
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal credit;
 
-    public String getEntryType() { return entryType; }
-    public void setEntryType(String entryType) { this.entryType = entryType; }
+    // Money debited
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal debit;
 
-    public Double getAmount() { return amount; }
-    public void setAmount(Double amount) { this.amount = amount; }
+    // Balance after transaction
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal balance;
+
+    // Date and Time
+    @Column(nullable = false)
+    private LocalDateTime transactionDate;
 }
