@@ -6,6 +6,10 @@ import com.stockbrokerage.backend.entity.Stock;
 import com.stockbrokerage.backend.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,7 +49,42 @@ public class StockService {
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+    public Page<StockResponse> getStocksWithPagination(int page, int size) {
 
+    Pageable pageable = PageRequest.of(page, size);
+
+    return stockRepository.findAll(pageable)
+            .map(this::mapToResponse);
+}
+public List<StockResponse> searchStocks(String keyword) {
+
+    return stockRepository
+            .findByCompanyNameContainingIgnoreCaseOrStockSymbolContainingIgnoreCase(
+                    keyword,
+                    keyword
+            )
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+}
+public List<StockResponse> getStocksBySector(String sector) {
+
+    return stockRepository.findBySectorIgnoreCase(sector)
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+}
+public List<StockResponse> sortStocks(String field, String direction) {
+
+    Sort sort = direction.equalsIgnoreCase("desc")
+            ? Sort.by(field).descending()
+            : Sort.by(field).ascending();
+
+    return stockRepository.findAll(sort)
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+}
     // Get Stock By ID
     public StockResponse getStockById(Long id) {
 

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -46,5 +47,13 @@ public class ClientController {
 
         return ResponseEntity.ok(clientService.deleteClient(id));
     }
+    @GetMapping("/search")
+public ResponseEntity<List<ClientResponse>> searchClients(
+        @RequestParam String keyword) {
+
+    return ResponseEntity.ok(
+            clientService.searchClients(keyword)
+    );
+}
 
 }

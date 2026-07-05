@@ -11,14 +11,13 @@ import lombok.*;
 @Builder
 public class SellStockRequest {
 
-    @NotNull(message = "Client Id is required")
+    @NotNull(message = "Client ID is required")
     private Long clientId;
 
-    @NotNull(message = "Stock Id is required")
+    @NotNull(message = "Stock ID is required")
     private Long stockId;
 
     @NotNull(message = "Quantity is required")
-    @Min(value = 1, message = "Quantity must be greater than zero")
+    @Min(value = 1, message = "Quantity must be greater than 0")
     private Integer quantity;
-
 }

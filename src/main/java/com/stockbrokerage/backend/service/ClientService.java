@@ -71,7 +71,18 @@ public class ClientService {
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+   // Search Clients
+public List<ClientResponse> searchClients(String keyword) {
 
+    return clientRepository
+            .findByUser_NameContainingIgnoreCaseOrUser_EmailContainingIgnoreCase(
+                    keyword,
+                    keyword
+            )
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+}
     // Delete Client
     public String deleteClient(Long id) {
 

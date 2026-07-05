@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 @RestController
@@ -33,6 +35,16 @@ public class StockController {
         return ResponseEntity.ok(stockService.getAllStocks());
     }
 
+    @GetMapping("/page")
+public ResponseEntity<Page<StockResponse>> getStocksWithPagination(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size) {
+
+    return ResponseEntity.ok(
+            stockService.getStocksWithPagination(page, size)
+    );
+}
+
     // Get Stock By ID
     @GetMapping("/{id}")
     public ResponseEntity<StockResponse> getStockById(
@@ -55,4 +67,29 @@ public class StockController {
 
     return ResponseEntity.ok(stockService.updateStock(id, request));
     }
+    @GetMapping("/search")
+public ResponseEntity<List<StockResponse>> searchStocks(
+        @RequestParam String keyword) {
+
+    return ResponseEntity.ok(
+            stockService.searchStocks(keyword)
+    );
+}
+@GetMapping("/sector")
+public ResponseEntity<List<StockResponse>> getStocksBySector(
+        @RequestParam String sector) {
+
+    return ResponseEntity.ok(
+            stockService.getStocksBySector(sector)
+    );
+}
+@GetMapping("/sort")
+public ResponseEntity<List<StockResponse>> sortStocks(
+        @RequestParam String field,
+        @RequestParam(defaultValue = "asc") String direction) {
+
+    return ResponseEntity.ok(
+            stockService.sortStocks(field, direction)
+    );
+}
 }
