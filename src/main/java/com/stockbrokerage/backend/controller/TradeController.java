@@ -16,7 +16,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -33,6 +33,7 @@ public class TradeController {
 
     // BUY STOCK
     @PostMapping("/buy")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<OrderResponse> buyStock(
             @Valid @RequestBody BuyStockRequest request) {
 
@@ -41,6 +42,7 @@ public class TradeController {
         );
     }
        @PostMapping("/sell")
+       @PreAuthorize("hasRole('CLIENT')")
       public ResponseEntity<OrderResponse> sellStock(
         @Valid @RequestBody SellStockRequest request) {
 
@@ -66,6 +68,7 @@ public ResponseEntity<List<OrderResponse>> searchOrdersByType(
 }
     // GET PORTFOLIO
     @GetMapping("/portfolio/{clientId}")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<HoldingResponse>> getPortfolio(
             @PathVariable Long clientId) {
 
@@ -79,6 +82,7 @@ public ResponseEntity<List<OrderResponse>> searchOrdersByType(
 
     // GET LEDGER
     @GetMapping("/ledger/{clientId}")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<LedgerResponse>> getLedger(
             @PathVariable Long clientId) {
 

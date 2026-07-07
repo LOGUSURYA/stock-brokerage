@@ -15,6 +15,8 @@ import com.stockbrokerage.backend.repository.HoldingRepository;
 
 import org.springframework.data.domain.PageRequest;
 import com.stockbrokerage.backend.dto.SellStockRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +30,9 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
+   
+         private static final Logger logger =
+            LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
 
     private final ClientRepository clientRepository;
@@ -86,7 +90,12 @@ public class OrderService {
                 .build();
 
         orderRepository.save(order);
-
+        logger.info(
+        "BUY ORDER -> Client: {}, Stock: {}, Qty: {}",
+        client.getUser().getName(),
+        stock.getStockSymbol(),
+        request.getQuantity()
+);
         portfolioService.addHolding(
         client,
         stock,
@@ -164,7 +173,12 @@ if (holding.getQuantityOwned() == 0) {
         .build();
 
 orderRepository.save(order);
-
+logger.info(
+        "SELL ORDER -> Client: {}, Stock: {}, Qty: {}",
+        client.getUser().getName(),
+        stock.getStockSymbol(),
+        request.getQuantity()
+);
  ledgerService.addCreditEntry(
     client,
     "Sold " + request.getQuantity() + " shares of " + stock.getStockSymbol(),

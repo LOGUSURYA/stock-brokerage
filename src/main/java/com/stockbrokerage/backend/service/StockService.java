@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +20,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class StockService {
-
+    
+      private static final Logger logger =
+            LoggerFactory.getLogger(StockService.class);
     private final StockRepository stockRepository;
 
     // Add Stock
@@ -38,6 +42,10 @@ public class StockService {
                 .build();
 
         stockRepository.save(stock);
+        logger.info("New stock added: {} ({})",
+        stock.getCompanyName(),
+        stock.getStockSymbol());
+
 
         return mapToResponse(stock);
     }
@@ -100,6 +108,8 @@ public List<StockResponse> sortStocks(String field, String direction) {
         Stock stock = stockRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Stock Not Found"));
 
+
+        logger.info("Stock deleted: {}", stock.getStockSymbol());
         stockRepository.delete(stock);
 
         return "Stock Deleted Successfully";
@@ -129,7 +139,7 @@ public List<StockResponse> sortStocks(String field, String direction) {
     stock.setSector(request.getSector());
 
     stockRepository.save(stock);
-
+    logger.info("Stock updated: {}", stock.getStockSymbol());
     return mapToResponse(stock);
 }
 }

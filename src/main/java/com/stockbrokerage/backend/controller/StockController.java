@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class StockController {
 
     // Add Stock
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StockResponse> addStock(
             @Valid @RequestBody StockRequest request) {
 
@@ -55,12 +57,14 @@ public ResponseEntity<Page<StockResponse>> getStocksWithPagination(
 
     // Delete Stock
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteStock(
             @PathVariable Long id) {
 
         return ResponseEntity.ok(stockService.deleteStock(id));
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StockResponse> updateStock(
         @PathVariable Long id,
         @Valid @RequestBody StockRequest request) {

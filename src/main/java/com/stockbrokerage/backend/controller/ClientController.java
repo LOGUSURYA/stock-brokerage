@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -21,6 +22,7 @@ public class ClientController {
 
     // Create Client Account
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ClientResponse> createClient(
             @Valid @RequestBody ClientRequest request) {
 
@@ -29,6 +31,7 @@ public class ClientController {
 
     // Get Client By ID
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ClientResponse> getClient(@PathVariable Long id) {
 
         return ResponseEntity.ok(clientService.getClient(id));
@@ -36,6 +39,7 @@ public class ClientController {
 
     // Get All Clients
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ClientResponse>> getAllClients() {
 
         return ResponseEntity.ok(clientService.getAllClients());
@@ -43,6 +47,7 @@ public class ClientController {
 
     // Delete Client
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteClient(@PathVariable Long id) {
 
         return ResponseEntity.ok(clientService.deleteClient(id));

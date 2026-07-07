@@ -9,11 +9,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.stockbrokerage.backend.config.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
+ 
+     private static final Logger logger =
+            LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
@@ -33,6 +37,7 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+        logger.info("New user registered: {}", user.getEmail());
 
         return "User Registered Successfully";
     }
@@ -46,6 +51,7 @@ public class AuthService {
     }
 
   String token = jwtUtil.generateToken(user.getEmail());
+  logger.info("User logged in: {}", user.getEmail());
 
     return new AuthResponse(
             token,

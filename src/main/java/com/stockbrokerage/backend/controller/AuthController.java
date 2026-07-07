@@ -5,6 +5,7 @@ import com.stockbrokerage.backend.dto.LoginRequest;
 import com.stockbrokerage.backend.dto.RegisterRequest;
 import com.stockbrokerage.backend.service.AuthService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(
-            @RequestBody RegisterRequest request) {
+           @Valid @RequestBody RegisterRequest request) {
 
         return ResponseEntity.ok(
                 authService.register(request)
